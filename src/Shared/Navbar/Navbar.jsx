@@ -25,9 +25,13 @@ const Navbar = () => {
       </li>
       {user ? (
         <>
-          <li>
-            <Link onClick={handleLogOut}>LogOut</Link>
-          </li>
+          <div className="flex justify-center items-center">
+            <img className="h-12 rounded-full mr-2 " src={user.photoURL} alt="" />
+            <p>{user.displayName}</p>
+            <li>
+              <Link onClick={handleLogOut}>LogOut</Link>
+            </li>
+          </div>
         </>
       ) : (
         <>

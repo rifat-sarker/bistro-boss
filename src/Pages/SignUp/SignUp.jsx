@@ -1,15 +1,17 @@
 import { useContext } from "react";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../providers/AuthProvider";
 import Swal from "sweetalert2";
 
 const SignUp = () => {
-  const { createUser } = useContext(AuthContext);
+  const { createUser, updateUserProfile } = useContext(AuthContext);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
 
@@ -18,10 +20,20 @@ const SignUp = () => {
     createUser(data.email, data.password).then((result) => {
       const loggedUser = result.user;
       console.log(loggedUser);
-      Swal.fire({
-        text: "Account created successfully",
-        icon: "success"
-      });
+      updateUserProfile(data.name,data.photoURL)
+      .then(()=>{
+        console.log('user profile info updated');
+        reset();
+        Swal.fire({
+          text: "Account created successfully",
+          icon: "success"
+        });
+        navigate('/')
+      })
+      .catch(error=>{
+        console.log(error);
+      })
+     
     });
   };
 
@@ -55,6 +67,23 @@ const SignUp = () => {
                 {errors.name && (
                   <span className="text-red-600 mt-1">
                     This field is required
+                  </span>
+                )}
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Photo URL</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="Photo URL"
+                  name="photoURL"
+                  {...register("photoURL", { required: true })}
+                  className="input input-bordered"
+                />
+                {errors.name && (
+                  <span className="text-red-600 mt-1">
+                    Photo URL is required
                   </span>
                 )}
               </div>
