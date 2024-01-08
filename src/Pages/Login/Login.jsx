@@ -13,12 +13,25 @@ import Swal from "sweetalert2";
 
 const Login = () => {
   const [disabled, setDisabled] = useState(true);
-  const { signIn } = useContext(AuthContext);
+  const { signIn , googleLogin} = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
 
   const from = location.state?.from?.pathname || "/";
 
+
+  //google login
+  const handleGoogleLogin = ()=>{
+    googleLogin()
+    .then(result=>{
+      console.log(result.user);
+      navigate(from, { replace: true });
+    })
+    .catch(error=>{
+      console.log(error);
+    })
+  }
+  
   useEffect(() => {
     loadCaptchaEnginge(6);
   }, []);
@@ -94,7 +107,7 @@ const Login = () => {
               </div>
               <div className="form-control">
                 <label className="label">
-                  <LoadCanvasTemplate />
+                  <p className="bg-neutral-100 p-1  rounded-lg link"><LoadCanvasTemplate /></p>
                 </label>
                 <input
                   onBlur={handleValidateCaptcha}
@@ -117,7 +130,7 @@ const Login = () => {
                 <small>New here?{" "}
                 <Link className="link" to="/signup">
                   Create an account
-                </Link></small>
+                </Link></small> or <Link onClick={handleGoogleLogin} className="btn ml-1 btn-outline btn-accent">Google</Link>
               </p>
             </form>
           </div>
