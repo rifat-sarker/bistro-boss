@@ -3,9 +3,10 @@ import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../providers/AuthProvider";
+import Swal from "sweetalert2";
 
 const SignUp = () => {
-  const {createUser} = useContext(AuthContext);
+  const { createUser } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -14,11 +15,14 @@ const SignUp = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    createUser(data.email, data.password)
-    .then(result=>{
+    createUser(data.email, data.password).then((result) => {
       const loggedUser = result.user;
-      console.log(loggedUser); 
-        })
+      console.log(loggedUser);
+      Swal.fire({
+        text: "Account created successfully",
+        icon: "success"
+      });
+    });
   };
 
   return (
@@ -123,10 +127,13 @@ const SignUp = () => {
                 />
               </div>
               <p>
-                Already have an account?{" "}
-                <Link className="link " to="/login">
-                  Login
-                </Link>
+                <small>
+                  {" "}
+                  Already have an account?{" "}
+                  <Link className="link " to="/login">
+                    Login
+                  </Link>
+                </small>
               </p>
             </form>
           </div>
