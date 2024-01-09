@@ -18,6 +18,7 @@ const Login = () => {
   const location = useLocation();
 
   const from = location.state?.from?.pathname || "/";
+  console.log('state in the location',location.state);
 
 
   //google login
@@ -115,12 +116,12 @@ const Login = () => {
                   name="captcha"
                   placeholder="Enter the captcha above"
                   className="input input-bordered"
-                  required
+                  // required
                 />
               </div>
               <div className="form-control mt-6">
                 <input
-                  disabled={disabled}
+                  disabled={false}
                   className="btn btn-primary"
                   type="submit"
                   value="Login"

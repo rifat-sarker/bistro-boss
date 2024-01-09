@@ -1,5 +1,57 @@
+import { useLocation, useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+import Swal from "sweetalert2";
+import axios from "axios";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+
 const FoodCard = ({ item }) => {
-  const { name, image, recipe, price } = item;
+  const { name, image, recipe, price, _id } = item;
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const axiosSecure = useAxiosSecure();
+
+  const handleAddToCart = (food) => {
+    if (user && user.email) {
+      //send cart item to the database
+      const cartItem = {
+        menuId: _id,
+        email: user.email,
+        name,
+        price,
+        image,
+      }
+      axiosSecure.post('/carts', cartItem)
+      .then(res=>{
+        console.log(res.data);  
+        if(res.data.insertedId){
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: `${name} added to your cart`,
+            showConfirmButton: false,
+            timer: 1500
+          });
+        }
+      })
+      
+    } else {
+      Swal.fire({
+        title: "You are not login",
+        text: "Please login to add to the cart",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, login",
+      }).then((result) => {
+        if (result.isConfirmed) {
+         // send user to login page
+         navigate('/login', {state:{from:location}})
+        }
+      });
+    }
+  };
   return (
     <div className="card w-96 bg-base-100 shadow-xl">
       <figure className="">
@@ -12,7 +64,10 @@ const FoodCard = ({ item }) => {
         <h2 className="card-title">{name}</h2>
         <p>{recipe}</p>
         <div className="card-actions">
-          <button className="btn text-orange-700 border-slate-400 btn-outline uppercase my-4 border-0 border-b-4">
+          <button
+            onClick={() => handleAddToCart(item)}
+            className="btn text-orange-700 border-slate-400 btn-outline uppercase my-4 border-0 border-b-4"
+          >
             Add to Cart
           </button>
         </div>

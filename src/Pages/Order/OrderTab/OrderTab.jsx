@@ -15,7 +15,7 @@ const OrderTab = ({ items }) => {
         pagination={{ clickable: true }}>
         <div className="grid md:grid-cols-2 justify-items-center lg:grid-cols-3 gap-12 mt-8">
           {items.map((item) => (
-            <SwiperSlide className="grid md:grid-cols-2 justify-items-center lg:grid-cols-3 gap-12 mt-8">
+            <SwiperSlide key={item._id} className="grid md:grid-cols-2 justify-items-center lg:grid-cols-3 gap-12 mt-8">
               <div className="">
                 <FoodCard key={item._id} item={item}></FoodCard>
               </div>

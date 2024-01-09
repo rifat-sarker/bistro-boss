@@ -1,9 +1,12 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../providers/AuthProvider";
+import { FaCartShopping } from "react-icons/fa6";
+import useCart from "../../hooks/useCart";
 
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
+  const [cart] = useCart();
   const handleLogOut = () => {
     logOut()
       .then()
@@ -23,10 +26,22 @@ const Navbar = () => {
       <li>
         <Link to="/secret">Secret</Link>
       </li>
+      <li>
+        <Link to="/">
+          <button className="btn">
+            <FaCartShopping></FaCartShopping>
+            <div className="badge badge-secondary">{cart.length}</div>
+          </button>
+        </Link>
+      </li>
       {user ? (
         <>
           <div className="flex justify-center items-center">
-            <img className="h-12 rounded-full mr-2 " src={user.photoURL} alt="" />
+            <img
+              className="h-12 rounded-full mr-2 "
+              src={user.photoURL}
+              alt=""
+            />
             <p>{user.displayName}</p>
             <li>
               <Link onClick={handleLogOut}>LogOut</Link>
@@ -73,7 +88,7 @@ const Navbar = () => {
           <a className="btn btn-ghost text-xl">Bistro Boss</a>
         </div>
         <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1">{navOptions}</ul>
+          <ul className="menu menu-horizontal flex items-center  px-1">{navOptions}</ul>
         </div>
         <div className="navbar-end">
           <a className="btn">Button</a>
