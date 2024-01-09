@@ -3,6 +3,7 @@ import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
 import axios from "axios";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useCart from "../../hooks/useCart";
 
 const FoodCard = ({ item }) => {
   const { name, image, recipe, price, _id } = item;
@@ -10,8 +11,9 @@ const FoodCard = ({ item }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const axiosSecure = useAxiosSecure();
+  const [,refetch] = useCart();
 
-  const handleAddToCart = (food) => {
+  const handleAddToCart = () => {
     if (user && user.email) {
       //send cart item to the database
       const cartItem = {
@@ -26,12 +28,14 @@ const FoodCard = ({ item }) => {
         console.log(res.data);  
         if(res.data.insertedId){
           Swal.fire({
-            position: "top-end",
+            position: "top-center",
             icon: "success",
             title: `${name} added to your cart`,
             showConfirmButton: false,
             timer: 1500
           });
+          // update the carts 
+          refetch();
         }
       })
       
@@ -65,7 +69,7 @@ const FoodCard = ({ item }) => {
         <p>{recipe}</p>
         <div className="card-actions">
           <button
-            onClick={() => handleAddToCart(item)}
+            onClick={handleAddToCart}
             className="btn text-orange-700 border-slate-400 btn-outline uppercase my-4 border-0 border-b-4"
           >
             Add to Cart
