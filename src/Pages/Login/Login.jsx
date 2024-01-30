@@ -9,6 +9,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../providers/AuthProvider";
 import { Helmet } from "react-helmet-async";
 import Swal from "sweetalert2";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 
 const Login = () => {
@@ -16,6 +17,7 @@ const Login = () => {
   const { signIn , googleLogin} = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
+  const axiosPublic = useAxiosPublic();
 
   const from = location.state?.from?.pathname || "/";
   console.log('state in the location',location.state);
@@ -26,7 +28,16 @@ const Login = () => {
     googleLogin()
     .then(result=>{
       console.log(result.user);
-      navigate(from, { replace: true });
+      const userInfo = {
+        name: result.user?.displayName,
+        email: result.user?.email
+      }
+      axiosPublic.post('/users', userInfo)
+      .then(res=>{
+        console.log(res.data);
+        navigate(from, { replace: true });
+
+      })
     })
     .catch(error=>{
       console.log(error);
